@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.replicas }}
+  revisionHistoryLimit: 20
+  selector:
+    matchLabels:
+      app: {{ .Values.app }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: "10%"
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.app }}
+    spec:
+      {{ if .Values.host_network }}
+      hostNetwork: true
+      {{ end }}
+      containers:
+      - image: "{{ .Values.registry }}/{{ .Values.image }}:{{ .Values.image_tag }}"
+        name: {{ .Values.app }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: {{ .Values.container_port }}
+        env:
+        - name: DB_HOST
+          value: "{{ .Values.env.DB_HOST }}"
+        - name: DB_NAME
+          value: "{{ .Values.env.DB_NAME }}"
+        - name: DB_PORT
+          value: "{{ .Values.env.DB_PORT }}"
+        - name: DB_USER
+          value: "{{ .Values.env.DB_USER }}"
+        - name: DEBUG
+          value: "{{ .Values.env.DEBUG }}"
+        securityContext:
+          allowPrivilegeEscalation: false
+          privileged: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: false
+      restartPolicy: Always

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod-1
+  labels:
+    security: S1
+spec:
+  containers:
+    - name: test-container
+      image: python:3.9-slim
+      command:
+      - sleep
+      - '3600'

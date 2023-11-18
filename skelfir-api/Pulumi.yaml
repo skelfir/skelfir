@@ -1,0 +1,3 @@
+name: api
+runtime: python
+description: A minimal Python Pulumi program

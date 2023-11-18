@@ -1,0 +1,2 @@
+CLUSTER_ID=$(pulumi stack output cluster_id)
+doctl kubernetes cluster kubeconfig save $CLUSTER_ID

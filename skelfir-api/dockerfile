@@ -1,0 +1,28 @@
+FROM python:3.9-slim
+# Install curl to be able to install poetry
+RUN apt-get update && apt-get install -y curl
+# Install poetry
+RUN curl -sSL https://install.python-poetry.org | python -
+# Add poetry's install dir to path
+ENV PATH $PATH:/root/.local/bin
+# Configure poetry to not create a virtualenv
+RUN poetry config virtualenvs.create false
+
+# Create the app directory
+RUN mkdir -p /app
+# Copy poetry project files to be able to install dependencies
+COPY poetry.lock /app/
+COPY pyproject.toml /app/
+# Set the workdir to /app so poetry can find the pyproject file
+WORKDIR /app
+# Install dependencies before copying all source
+# files since dependencies change less frequently
+RUN poetry install --without dev,test
+
+# Set the workdir back to root
+WORKDIR /
+
+# Copy rest of source files
+COPY app app/
+
+CMD ["uvicorn", "app.app:app", "--host=0.0.0.0", "--port=8000", "--log-config=app/log_config.yml"]

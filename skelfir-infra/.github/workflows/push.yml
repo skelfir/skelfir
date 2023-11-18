@@ -1,0 +1,25 @@
+name: Deploy on merge to master
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+jobs:
+  preview:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - run: curl -sSL https://install.python-poetry.org | python3 -
+      - run: poetry config virtualenvs.create false
+      - run: poetry install  --without dev,test
+      - uses: pulumi/actions@v3
+        with:
+          command: up
+          stack-name: dev
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          DIGITALOCEAN_TOKEN: ${{ secrets.DIGITALOCEAN_TOKEN }}

@@ -1,0 +1,13 @@
+---
+# Overrides for production
+replicas: 2
+registry: logileifs
+domain: dev.skelfir.com
+
+env:
+  DB_HOST: db.dev.logileifs.com
+  DB_NAME: test
+  DB_PORT: 28015
+  DB_USER: admin
+  DEBUG: 1
+  LOG_LEVEL: debug

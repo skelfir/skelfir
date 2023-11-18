@@ -1,0 +1,23 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+httpx = "*"
+websockets = "*"
+starlette = "*"
+uvicorn = "*"
+aiofiles = "*"
+pyyaml = "*"
+webargs-starlette = "*"
+
+[dev-packages]
+guid = "*"
+ipython = "*"
+rethinkdb = "*"
+pulumi = "<4.0.0,>=3.0.0"
+pulumi-docker = "*"
+
+[requires]
+python_version = "3.7"

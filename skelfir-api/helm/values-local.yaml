@@ -1,0 +1,13 @@
+---
+# Overrides for local dev
+replicas: 1
+registry: localhost:5000
+domain: cluster.local
+
+env:
+  DB_HOST: db.dev.logileifs.com
+  DB_NAME: test
+  DB_PORT: 28015
+  DB_USER: admin
+  DEBUG: 1
+  LOG_LEVEL: debug
