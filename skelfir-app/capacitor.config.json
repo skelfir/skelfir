@@ -1,0 +1,8 @@
+{
+  "appId": "com.skelfir.app",
+  "appName": "Skelfir",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
