@@ -2,9 +2,14 @@
 serve:
 	npm run dev
 
-build:
+build-vite:
 	# https://capacitorjs.com/docs/cli/commands/build
 	npm run build
+
+build-docker:
+	docker build -t skelfir-app:latest .
+
+build: build-vite build-docker
 
 sync:
 	npx cap sync

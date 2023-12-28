@@ -5,19 +5,19 @@ description = ""
 authors = ["Logi Leifsson <logileifs@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "infra"}]
+packages = [{include = "skelfir_infra"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
-pulumi = "^3.40.2"
+python = "^3.9"
+pulumi = "^3.94.2"
+pulumi-docker = "^4.5.0"
+pulumi-random = "^4.14.0"
 pulumi-kubernetes = "^3.21.4"
-pulumi-docker = "^3.4.1"
-pulumi-random = "^4.8.2"
 pulumi-digitalocean = "^4.16.0"
 
 
 [tool.poetry.group.dev.dependencies]
-ipython = "^8.5.0"
+ipython = "^8.17.2"
 
 [build-system]
 requires = ["poetry-core"]

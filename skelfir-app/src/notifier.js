@@ -17,6 +17,7 @@ export function register() {
 
       // Send the token to your backend server via an HTTP GET request
       //await fetch('https://your.api.hostname/register/device?token=' + deviceToken);
+      //await fetch(`https://skelfir.com/api/devices/${deviceToken}/checkin`, {method: 'POST'})
 
       // Succeeded, optionally do something to alert the user
   })

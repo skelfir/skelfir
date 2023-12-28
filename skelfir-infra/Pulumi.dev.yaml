@@ -1,6 +1,6 @@
 config:
   digitalocean:token:
-    secure: AAABAOvE0G1FwZJueUJ6D1xptb1YEGoSoe+qB6/9Hk8ewxTN4mPGRK8wdr18Ge312m91gnfXXJnO+DiXpuY7aaRh0gK/Ozh0wjnhwap6osrzdX3VBKAacB7ptxR8Fjtj
+    secure: AAABAPXhqAOj3OUi37ytygZ7VLF7bSRbhJymbTpY48Pc9IdHz9nLvwjSnoqWFH5SKAwUdW2XijANPO+gkyeiw0eMB22rbFjQhjbWiYMnE1eCzI5SiVW8uBGjAF720+nsptO80kpm4Q==
   infra:cluster:
     base_node_pool:
       name: base
@@ -9,7 +9,7 @@ config:
       #size: s-2vcpu-4gb
     name: dev-cluster
     region: lon1
-    version: 1.24.4-do.0
+    version: 1.28.2-do.0
     worker_node_pool:
       name: workers
       node_count: 1

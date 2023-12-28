@@ -1,0 +1,21 @@
+---
+# Common values
+#imageRepo: 474390468681.dkr.ecr.eu-west-1.amazonaws.com/avilabs/flight-service
+app: skelfir-app
+image: skelfir-app
+registry: logileifs
+image_tag: latest
+container_port: 3000
+host_network: false
+replicas: 1
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 128Mi
+
+env:
+  DEBUG: 1

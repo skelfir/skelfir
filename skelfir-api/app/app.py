@@ -18,8 +18,10 @@ from webargs_starlette import WebargsHTTPException
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.httpsredirect import HTTPSRedirectMiddleware
 
+from app import db
 from app.vedur import get_quakes
 from app.logutils import get_logger
+from app.routes.quakes import QuakesRoute
 
 log = get_logger(__name__)
 
@@ -131,6 +133,11 @@ async def locate(request):
 	return JSONResponse(rsp.json())
 
 
+async def startup():
+	#await db.setup()
+	print('Ready to go')
+
+
 file_path = Path(__file__).resolve()
 html_dir = file_path.parents[0].joinpath('html')
 log.info(f'html_dir: {html_dir}')
@@ -138,6 +145,7 @@ routes = [
 	Route('/', index),
 	Route('/health', health),
 	Route('/quakes', quakes),
+	Route('/quakes2', QuakesRoute),
 	Route('/locate/', locate),
 	Mount('/html', StaticFiles(directory=html_dir))
 ]
@@ -147,7 +155,12 @@ middlewares = [
 ]
 
 
-app = Starlette(debug=False, routes=routes, middleware=middlewares)
+app = Starlette(
+	debug=False,
+	routes=routes,
+	middleware=middlewares,
+	on_startup=[startup],
+)
 
 #app.add_middleware(HTTPSRedirectMiddleware)
 #app.add_middleware(CORSMiddleware, allow_origins=['*'])

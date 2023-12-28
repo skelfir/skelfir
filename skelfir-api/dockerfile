@@ -17,7 +17,7 @@ COPY pyproject.toml /app/
 WORKDIR /app
 # Install dependencies before copying all source
 # files since dependencies change less frequently
-RUN poetry install --without dev,test
+RUN poetry install --without dev --sync --no-root
 
 # Set the workdir back to root
 WORKDIR /
@@ -25,4 +25,4 @@ WORKDIR /
 # Copy rest of source files
 COPY app app/
 
-CMD ["uvicorn", "app.app:app", "--host=0.0.0.0", "--port=8000", "--log-config=app/log_config.yml"]
+CMD ["uvicorn", "app.app:app", "--host=0.0.0.0", "--port=8080", "--log-config=app/log_config.yml"]

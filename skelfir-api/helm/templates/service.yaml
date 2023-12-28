@@ -9,72 +9,42 @@ spec:
     app: {{ .Values.app }}
   ports:
     - protocol: TCP
-      port: 8000
-      targetPort: 8000
+      port: 8080
+      targetPort: 8080
 ---
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: api-ingress
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    ingress.kubernetes.io/ssl-redirect: "false"
-    traefik.ingress.kubernetes.io/rewrite-target: /
-    traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
+  name: {{ .Values.app }}
+  labels:
+    app: {{ .Values.app }}
 spec:
   rules:
-  - host: {{ .Values.domain }}
+  - host: "api.skelfir.com"
     http:
       paths:
-      - path: /api
+      - pathType: Prefix
+        path: "/"
         backend:
-          serviceName: {{ .Values.app }}
-          servicePort: 8000
+          service:
+            name: {{ .Values.app }}
+            port:
+              number: 8080
 ---
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: web-ingress
-  annotations:
-    kubernetes.io/ingress.class: traefik
-    ingress.kubernetes.io/ssl-redirect: "false"
-    traefik.ingress.kubernetes.io/rewrite-target: /
-    traefik.ingress.kubernetes.io/rule-type: PathPrefixStrip
-spec:
-  rules:
-  - host: {{ .Values.domain }}
-    http:
-      paths:
-      - path: /
-        backend:
-          serviceName: {{ .Values.app }}
-          servicePort: 8000
----
-#apiVersion: traefik.containo.us/v1alpha1
-#kind: IngressRoute
+#apiVersion: projectcontour.io/v1
+#kind: HTTPProxy
 #metadata:
-#  name: http-redirect-ingressroute
+#  name: skelfir-api-proxy
 #spec:
-#  entryPoints:
-#    - web
+#  virtualhost:
+#    fqdn: "*"
 #  routes:
-#    - match: Host(`localhost`) && PathPrefix(`/api`)
-#      kind: Rule
+#    - conditions:
+#      - prefix: /
 #      services:
 #        - name: {{ .Values.app }}
 #          port: 8000
-#      middlewares:
-#        - name: {{ .Values.app }}-stripprefix
-#---
-#apiVersion: traefik.containo.us/v1alpha1
-#kind: Middleware
-#metadata:
-#  name: {{ .Values.app }}-stripprefix
-#spec:
-#  stripPrefix:
-#    prefixes:
-#      - /api
-#---
+---
 # httpproxy.yaml
 #apiVersion: projectcontour.io/v1
 #kind: HTTPProxy
