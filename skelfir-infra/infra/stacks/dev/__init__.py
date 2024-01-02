@@ -14,6 +14,21 @@ config = pulumi.Config()
 #	region=config.require('region')
 #)
 
+skelfir_lb = do.LoadBalancer(
+	"skelfir-lb",
+	region="lon1",
+	forwarding_rules=[
+		do.LoadBalancerForwardingRuleArgs(
+			entry_port=80,
+			entry_protocol="http",
+			target_port=80,
+			target_protocol="http",
+		)
+	],
+)
+ingress_ip = skelfir_lb.ip.apply(lambda ip: ip)
+lb_id = skelfir_lb.id.apply(lambda id: id)
+
 #db_cfg = config.require_object('db')
 #db = do.Droplet(
 #	db_cfg['name'],
@@ -49,19 +64,11 @@ cluster = do.KubernetesCluster(
 		'name': cluster_cfg['base_node_pool']['name'],
 		'size': cluster_cfg['base_node_pool']['size'],
 		'node_count': cluster_cfg['base_node_pool']['node_count']
-	}
+	},
+	opts=pulumi.ResourceOptions(
+		depends_on=[],
+	),
 )
-
-#def get_kubeconfig(status):
-#	if status == "running":
-#		clusterDataSource = cluster.name.apply(
-#			lambda name: do.get_kubernetes_cluster(name)
-#		)
-#		return clusterDataSource.kube_configs[0].raw_config
-#	else:
-#		return cluster.kube_configs[0].raw_config
-
-#kube_config = cluster.status.apply(lambda status: get_kubeconfig(status))
 
 # workaround for expiring DOKS cluster token
 # see: https://github.com/pulumi/pulumi-digitalocean/issues/78#issuecomment-639669865
@@ -113,12 +120,6 @@ k8s_provider = k8s.Provider(
 	)
 )
 
-
-def omit_crd_status(obj, opts):
-	if obj['kind'] == 'CustomResourceDefinition':
-		obj.pop('status')
-
-
 ingress_ns_name = 'ingress'
 ingress_ns = core.Namespace(
 	'ingress-namespace',
@@ -129,13 +130,6 @@ ingress_ns = core.Namespace(
 		provider=k8s_provider,
 	)
 )
-#ingress_ns_name = ingress_ns.metadata.name.apply(lambda x: x)
-
-
-#def fix_service_namespace(obj, opts):
-#	if obj['kind'] == 'Service':
-#		obj['metadata']['namespace'] = ingress_ns_name
-
 
 # Managed Lets Encrypt certificate is already registered with DigitalOcean
 certificate = do.get_certificate(name="skelfir")
@@ -143,13 +137,14 @@ certificate = do.get_certificate(name="skelfir")
 ingress_contour = helm.Chart(
 	'contour',
 	helm.ChartOpts(
-		namespace=ingress_ns_name,
+		namespace=ingress_ns.metadata.name,
 		chart='contour',
 		version="15.0.1",
 		values={
 			"envoy": {
 				"service": {
 					"annotations": {
+						"kubernetes.digitalocean.com/load-balancer-id": lb_id,
 						'service.beta.kubernetes.io/do-loadbalancer-protocol': 'http',
 						'service.beta.kubernetes.io/do-loadbalancer-tls-ports': '443',
 						'service.beta.kubernetes.io/do-loadbalancer-algorithm': 'round_robin',
@@ -173,7 +168,7 @@ ingress_contour = helm.Chart(
 	opts=pulumi.ResourceOptions(
 		parent=ingress_ns,
 		provider=k8s_provider,
-		depends_on=[ingress_ns],
+		depends_on=[ingress_ns, skelfir_lb],
 		custom_timeouts=pulumi.CustomTimeouts(
 			create="30m",
 			delete="30m"
@@ -181,19 +176,22 @@ ingress_contour = helm.Chart(
 	)
 )
 
-ingress_svc = ingress_contour.resources['v1/Service:ingress/contour-envoy']
-#ingress_status = ingress_svc.status
-ingress_ip = ingress_svc.status.apply(lambda s: s.load_balancer.ingress[0].ip)
-#ingress_annotations = ingress_svc.metadata.annotations
-load_balancer_id = ingress_svc.metadata.annotations.apply(
-	lambda x: x.get('kubernetes.digitalocean.com/load-balancer-id')
+metrics_ns_name = 'metrics'
+metrics_ns = core.Namespace(
+	'metrics-namespace',
+	metadata={'name': metrics_ns_name},
+	opts=pulumi.ResourceOptions(
+		parent=cluster,
+		depends_on=[cluster],
+		provider=k8s_provider,
+	)
 )
 
 metrics = helm.Chart(
 	'metrics-server',
 	helm.ChartOpts(
 		#skip_await=True,
-		namespace='kube-system',
+		namespace=metrics_ns_name,
 		chart='metrics-server',
 		version='3.8.2',
 		values={
@@ -211,26 +209,16 @@ metrics = helm.Chart(
 		)
 	),
 	opts=pulumi.ResourceOptions(
-		parent=cluster,
+		parent=metrics_ns,
 		provider=k8s_provider,
-		depends_on=[cluster]
-	)
-)
-
-betterstack_ns = core.Namespace(
-	'betterstack-namespace',
-	metadata={'name': 'betterstack'},
-	opts=pulumi.ResourceOptions(
-		parent=cluster,
-		depends_on=[cluster],
-		provider=k8s_provider,
+		depends_on=[metrics_ns]
 	)
 )
 
 betterstack = helm.Chart(
 	'betterstack',
 	helm.ChartOpts(
-		namespace='betterstack',
+		namespace=metrics_ns_name,
 		chart='betterstack-logs',
 		version='1.1.1',
 		values={
@@ -253,11 +241,11 @@ betterstack = helm.Chart(
 							'extra_namespace_label_selector': "kubernetes.io/metadata.name!=kube-system"
 						},
 						'better_stack_kubernetes_metrics_nodes': {
-							'endpoint': 'https://metrics-server.kube-system/apis/metrics.k8s.io/v1beta1/nodes',
+							'endpoint': 'https://metrics-server.metrics/apis/metrics.k8s.io/v1beta1/nodes',
 							'tls': {'verify_certificate': False}
 						},
 						'better_stack_kubernetes_metrics_pods': {
-							'endpoint': 'https://metrics-server.kube-system/apis/metrics.k8s.io/v1beta1/pods',
+							'endpoint': 'https://metrics-server.metrics/apis/metrics.k8s.io/v1beta1/pods',
 							'tls': {'verify_certificate': False}
 						}
 					}
@@ -269,13 +257,11 @@ betterstack = helm.Chart(
 		)
 	),
 	opts=pulumi.ResourceOptions(
-		parent=cluster,
+		parent=metrics_ns,
 		provider=k8s_provider,
-		depends_on=[metrics, betterstack_ns]
+		depends_on=metrics.ready
 	)
 )
-
-#skelfir_lb = do.LoadBalancer.get('skelfir-lb', load_balancer_id)
 
 # No need to do this when domain has
 # already been registered with DigitalOcean
@@ -346,7 +332,7 @@ exports = {
 	#'ingress_status': ingress_status,
 	#'ingress_svc': ingress_svc,
 	#'ingress_annotations': ingress_annotations,
-	'load_balancer_id': load_balancer_id,
+	#'load_balancer_id': load_balancer_id,
 	'certificate_id': certificate.uuid,
 	#'skelfir_lb': skelfir_lb,
 	'cluster_id': cluster.id,
@@ -354,4 +340,5 @@ exports = {
 	'kube_config': kube_config,
 	#'db_fqdn': db_subdomain.fqdn,
 	'cluster_fqdn': dev_subdomain.fqdn,
+	'loadbalancer_id': lb_id,
 }

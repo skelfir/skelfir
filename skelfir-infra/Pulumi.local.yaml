@@ -1,37 +1,70 @@
 config:
-  infra:cluster_name: &cluster_name local-dev-cluster
-  infra:db:
-    image: rethinkdb
-    name: rethink
-    ports:
-    - 28015:28015
-    - 9090:8080
-  infra:k3d_config:
+  betterstack:token:
+    secure: AAABAL/SBJnvs7oJALZOfK/SmvxO9xnO7tDlfhFbEieiq4JOOtZuZeY6ONfaWYyO0ieET47xoYs=
+  infra:cluster:
     agents: 1
-    servers: 1
-    apiVersion: k3d.io/v1alpha2
+    apiVersion: k3d.io/v1alpha3
+    image: rancher/k3s:v1.21.12-k3s1
     kind: Simple
-    labels:
-    - label: foo=bar
-      nodeFilters:
-      - agent[0]
-    name: *cluster_name
+    name: local-dev-cluster
     options:
       k3d:
         wait: true
       k3s:
-        extraServerArgs:
-        - --disable=traefik
-        #- --disable=metrics-server
+        extraArgs:
+          - arg: --disable=traefik
+            nodeFilters:
+              - server:*
+        nodeLabels:
+          - label: nodegroup=workers
+            nodeFilters:
+              - agent:*
     ports:
-    - nodeFilters:
-      - loadbalancer
-      port: 80:80
+      - nodeFilters:
+          - loadbalancer
+        port: 80:80
     registries:
       config: |
         mirrors:
           localhost:5000:
             endpoint:
             - http://host.k3d.internal:5000
-      create: false
+      #volumes:
+      #- volume: /private/gorkube-mount:/private/gorkube-mount
+    servers: 1
+  infra:cluster_name: &cluster_name local-dev-cluster
+  infra:db:
+    image: rethinkdb
+    name: rethink
+    ports:
+      - 28015:28015
+      - 9090:8080
+  #infra:k3d_config:
+  #  agents: 1
+  #  servers: 1
+  #  apiVersion: k3d.io/v1alpha2
+  #  kind: Simple
+  #  labels:
+  #  - label: foo=bar
+  #    nodeFilters:
+  #    - agent[0]
+  #  name: *cluster_name
+  #  options:
+  #    k3d:
+  #      wait: true
+  #    k3s:
+  #      extraServerArgs:
+  #      - --disable=traefik
+  #      #- --disable=metrics-server
+  #  ports:
+  #  - nodeFilters:
+  #    - loadbalancer
+  #    port: 80:80
+  #  registries:
+  #    config: |
+  #      mirrors:
+  #        localhost:5000:
+  #          endpoint:
+  #          - http://host.k3d.internal:5000
+  #    create: false
   infra:region: local

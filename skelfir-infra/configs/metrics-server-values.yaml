@@ -1,0 +1,7 @@
+apiService:
+  create: True
+replicas: 1
+#extraArgs:
+#  'kubelet-insecure-tls': True
+#   'kubelet-preferred-address-types': 'InternalIP'
+#

@@ -3,6 +3,31 @@
 # infra
 Infrastructure creation and updates for skelfir
 
+## Project structure
+```
+.
+├── __main__.py
+├── README.md
+├── poetry.toml
+├── poetry.lock
+├── pyproject.toml
+├── Pulumi.yaml
+├── Pulumi.local.yaml
+├── Pulumi.dev.yaml
+├── infra/
+├── modules/
+├── configs/
+└── providers/
+```
+1. Entrypoint is `__main__.py`
+2. `modules/` contains the logical units of the infrastructure as python modules, such as `modules/cluster.py` which contains the code for provisioning a Kubernetes cluster.
+3. `modules/infra/` contains cloud provider specific logic, such as loadbalancer provisioning, spinning up VMs and networking.
+4. `modules/kubernetes/` contains anything that is kubernetes cluster related.
+4. `providers/` contains custom providers/resources such as the bespoke K3D cluster provider and resource.
+5. `configs/` contains external configuration files such as values files for helm charts and templates.
+6. All configuration that is directly relevant to the infrastructure itself, such as node pool config for the k8s cluster, region or encrypted secrets goes to the relevant stack's config file ,`Pulumi.local.yaml` for the local stack.
+
+
 ## Getting started
 1. Create a virtualenv - `mkvirtualenv -p python3.11 skelfir-infra`
 2. Activate the virtualenv - `activate skelfir-infra`

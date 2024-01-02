@@ -1,0 +1,14 @@
+envoy:
+  service:
+    annotations:
+      "kubernetes.digitalocean.com/load-balancer-id": <LOADBALANCER_ID>
+      'service.beta.kubernetes.io/do-loadbalancer-protocol': 'http'
+      'service.beta.kubernetes.io/do-loadbalancer-tls-ports': '443'
+      'service.beta.kubernetes.io/do-loadbalancer-algorithm': 'round_robin'
+      'service.beta.kubernetes.io/do-loadbalancer-redirect-http-to-https': 'true'
+      'service.beta.kubernetes.io/do-loadbalancer-certificate-id': <CERTIFICATE_UUID>
+      'service.beta.kubernetes.io/do-loadbalancer-disable-lets-encrypt-dns-records': 'true'
+    # Map the HTTPS port to HTTP - workaround for LB TLS termination
+    # see: https://github.com/projectcontour/contour/issues/2441#issuecomment-625853628
+    targetPorts:
+      https: "http"

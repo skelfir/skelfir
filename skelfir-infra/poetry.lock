@@ -1,12 +1,4 @@
 [[package]]
-name = "appnope"
-version = "0.1.3"
-description = "Disable App Nap on macOS >= 10.9"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "arpeggio"
 version = "2.0.2"
 description = "Packrat parser interpreter"
@@ -126,7 +118,7 @@ protobuf = ["grpcio-tools (>=1.56.2)"]
 
 [[package]]
 name = "idna"
-version = "3.4"
+version = "3.6"
 description = "Internationalized Domain Names in Applications (IDNA)"
 category = "main"
 optional = false
@@ -134,21 +126,20 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "ipython"
-version = "8.17.2"
+version = "8.18.1"
 description = "IPython: Productive Interactive Computing"
 category = "dev"
 optional = false
 python-versions = ">=3.9"
 
 [package.dependencies]
-appnope = {version = "*", markers = "sys_platform == \"darwin\""}
 colorama = {version = "*", markers = "sys_platform == \"win32\""}
 decorator = "*"
 exceptiongroup = {version = "*", markers = "python_version < \"3.11\""}
 jedi = ">=0.16"
 matplotlib-inline = "*"
 pexpect = {version = ">4.3", markers = "sys_platform != \"win32\""}
-prompt-toolkit = ">=3.0.30,<3.0.37 || >3.0.37,<3.1.0"
+prompt-toolkit = ">=3.0.41,<3.1.0"
 pygments = ">=2.4.0"
 stack-data = "*"
 traitlets = ">=5"
@@ -227,7 +218,7 @@ test = ["hypothesis", "pretend", "pytest"]
 
 [[package]]
 name = "pexpect"
-version = "4.8.0"
+version = "4.9.0"
 description = "Pexpect allows easy control of interactive console applications."
 category = "dev"
 optional = false
@@ -238,7 +229,7 @@ ptyprocess = ">=0.5"
 
 [[package]]
 name = "prompt-toolkit"
-version = "3.0.41"
+version = "3.0.43"
 description = "Library for building powerful interactive command lines in Python"
 category = "dev"
 optional = false
@@ -265,7 +256,7 @@ python-versions = "*"
 
 [[package]]
 name = "pulumi"
-version = "3.94.2"
+version = "3.99.0"
 description = "Pulumi's Python SDK"
 category = "main"
 optional = false
@@ -281,7 +272,7 @@ six = ">=1.12,<2.0"
 
 [[package]]
 name = "pulumi-digitalocean"
-version = "4.24.0"
+version = "4.25.1"
 description = "A Pulumi package for creating and managing DigitalOcean cloud resources."
 category = "main"
 optional = false
@@ -307,7 +298,7 @@ semver = ">=2.8.1"
 
 [[package]]
 name = "pulumi-kubernetes"
-version = "3.30.2"
+version = "4.6.1"
 description = "A Pulumi package for creating and managing Kubernetes resources."
 category = "main"
 optional = false
@@ -316,13 +307,25 @@ python-versions = ">=3.7"
 [package.dependencies]
 parver = ">=0.2.1"
 pulumi = ">=3.25.0,<4.0.0"
-pyyaml = ">=5.3.1"
 requests = ">=2.21,<3.0"
 semver = ">=2.8.1"
 
 [[package]]
+name = "pulumi-null"
+version = "0.0.1"
+description = "A Pulumi package for creating and managing Null cloud resources."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+parver = ">=0.2.1"
+pulumi = ">=3.0.0,<4.0.0"
+semver = ">=2.8.1"
+
+[[package]]
 name = "pulumi-random"
-version = "4.14.0"
+version = "4.15.0"
 description = "A Pulumi package to safely use randomness in Pulumi programs."
 category = "main"
 optional = false
@@ -346,7 +349,7 @@ tests = ["pytest"]
 
 [[package]]
 name = "pygments"
-version = "2.17.1"
+version = "2.17.2"
 description = "Pygments is a syntax highlighting package written in Python."
 category = "dev"
 optional = false
@@ -416,7 +419,7 @@ tests = ["cython", "littleutils", "pygments", "pytest", "typeguard"]
 
 [[package]]
 name = "traitlets"
-version = "5.13.0"
+version = "5.14.0"
 description = "Traitlets Python configuration system"
 category = "dev"
 optional = false
@@ -424,11 +427,11 @@ python-versions = ">=3.8"
 
 [package.extras]
 docs = ["myst-parser", "pydata-sphinx-theme", "sphinx"]
-test = ["argcomplete (>=3.0.3)", "mypy (>=1.6.0)", "pre-commit", "pytest (>=7.0,<7.5)", "pytest-mock", "pytest-mypy-testing"]
+test = ["argcomplete (>=3.0.3)", "mypy (>=1.7.0)", "pre-commit", "pytest (>=7.0,<7.5)", "pytest-mock", "pytest-mypy-testing"]
 
 [[package]]
 name = "typing-extensions"
-version = "4.8.0"
+version = "4.9.0"
 description = "Backported and Experimental Type Hints for Python 3.8+"
 category = "main"
 optional = false
@@ -449,7 +452,7 @@ zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "wcwidth"
-version = "0.2.11"
+version = "0.2.12"
 description = "Measures the displayed width of unicode strings in a terminal"
 category = "dev"
 optional = false
@@ -458,13 +461,9 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "a02211ee2cfae955676626faf409b88e384ad5fa2f1702cb1aa2cc17cd9d7796"
+content-hash = "f2b6e8c97b57ade043e592fe4cb0fec166ff268ee177509a22d87dee69b18746"
 
 [metadata.files]
-appnope = [
-    {file = "appnope-0.1.3-py2.py3-none-any.whl", hash = "sha256:265a455292d0bd8a72453494fa24df5a11eb18373a60c7c0430889f22548605e"},
-    {file = "appnope-0.1.3.tar.gz", hash = "sha256:02bd91c4de869fbb1e1c50aafc4098827a7a54ab2f39d9dcba6c9547ed920e24"},
-]
 arpeggio = [
     {file = "Arpeggio-2.0.2-py2.py3-none-any.whl", hash = "sha256:f7c8ae4f4056a89e020c24c7202ac8df3e2bc84e416746f20b0da35bb1de0250"},
     {file = "Arpeggio-2.0.2.tar.gz", hash = "sha256:c790b2b06e226d2dd468e4fbfb5b7f506cec66416031fde1441cf1de2a0ba700"},
@@ -641,12 +640,12 @@ grpcio = [
     {file = "grpcio-1.56.2.tar.gz", hash = "sha256:0ff789ae7d8ddd76d2ac02e7d13bfef6fc4928ac01e1dcaa182be51b6bcc0aaa"},
 ]
 idna = [
-    {file = "idna-3.4-py3-none-any.whl", hash = "sha256:90b77e79eaa3eba6de819a0c442c0b4ceefc341a7a2ab77d7562bf49f425c5c2"},
-    {file = "idna-3.4.tar.gz", hash = "sha256:814f528e8dead7d329833b91c5faa87d60bf71824cd12a7530b5526063d02cb4"},
+    {file = "idna-3.6-py3-none-any.whl", hash = "sha256:c05567e9c24a6b9faaa835c4821bad0590fbb9d5779e7caa6e1cc4978e7eb24f"},
+    {file = "idna-3.6.tar.gz", hash = "sha256:9ecdbbd083b06798ae1e86adcbfe8ab1479cf864e4ee30fe4e46a003d12491ca"},
 ]
 ipython = [
-    {file = "ipython-8.17.2-py3-none-any.whl", hash = "sha256:1e4d1d666a023e3c93585ba0d8e962867f7a111af322efff6b9c58062b3e5444"},
-    {file = "ipython-8.17.2.tar.gz", hash = "sha256:126bb57e1895594bb0d91ea3090bbd39384f6fe87c3d57fd558d0670f50339bb"},
+    {file = "ipython-8.18.1-py3-none-any.whl", hash = "sha256:e8267419d72d81955ec1177f8a29aaa90ac80ad647499201119e2f05e99aa397"},
+    {file = "ipython-8.18.1.tar.gz", hash = "sha256:ca6f079bb33457c66e233e4580ebfc4128855b4cf6370dddd73842a9563e8a27"},
 ]
 jedi = [
     {file = "jedi-0.19.1-py2.py3-none-any.whl", hash = "sha256:e983c654fe5c02867aef4cdfce5a2fbb4a50adc0af145f70504238f18ef5e7e0"},
@@ -665,12 +664,12 @@ parver = [
     {file = "parver-0.5.tar.gz", hash = "sha256:b9fde1e6bb9ce9f07e08e9c4bea8d8825c5e78e18a0052d02e02bf9517eb4777"},
 ]
 pexpect = [
-    {file = "pexpect-4.8.0-py2.py3-none-any.whl", hash = "sha256:0b48a55dcb3c05f3329815901ea4fc1537514d6ba867a152b581d69ae3710937"},
-    {file = "pexpect-4.8.0.tar.gz", hash = "sha256:fc65a43959d153d0114afe13997d439c22823a27cefceb5ff35c2178c6784c0c"},
+    {file = "pexpect-4.9.0-py2.py3-none-any.whl", hash = "sha256:7236d1e080e4936be2dc3e326cec0af72acf9212a7e1d060210e70a47e253523"},
+    {file = "pexpect-4.9.0.tar.gz", hash = "sha256:ee7d41123f3c9911050ea2c2dac107568dc43b2d3b0c7557a33212c398ead30f"},
 ]
 prompt-toolkit = [
-    {file = "prompt_toolkit-3.0.41-py3-none-any.whl", hash = "sha256:f36fe301fafb7470e86aaf90f036eef600a3210be4decf461a5b1ca8403d3cb2"},
-    {file = "prompt_toolkit-3.0.41.tar.gz", hash = "sha256:941367d97fc815548822aa26c2a269fdc4eb21e9ec05fc5d447cf09bad5d75f0"},
+    {file = "prompt_toolkit-3.0.43-py3-none-any.whl", hash = "sha256:a11a29cb3bf0a28a387fe5122cdb649816a957cd9261dcedf8c9f1fef33eacf6"},
+    {file = "prompt_toolkit-3.0.43.tar.gz", hash = "sha256:3527b7af26106cbc65a040bcc84839a3566ec1b051bb0bfe953631e704b0ff7d"},
 ]
 protobuf = [
     {file = "protobuf-4.25.1-cp310-abi3-win32.whl", hash = "sha256:193f50a6ab78a970c9b4f148e7c750cfde64f59815e86f686c22e26b4fe01ce7"},
@@ -690,30 +689,34 @@ ptyprocess = [
     {file = "ptyprocess-0.7.0.tar.gz", hash = "sha256:5c5d0a3b48ceee0b48485e0c26037c0acd7d29765ca3fbb5cb3831d347423220"},
 ]
 pulumi = [
-    {file = "pulumi-3.94.2-py3-none-any.whl", hash = "sha256:415b6cffde84b4c1dd1274916e1e6bf96f9d9f0dc736955ec282b07ffdcfa8a9"},
+    {file = "pulumi-3.99.0-py3-none-any.whl", hash = "sha256:60cf93d6f1918fd35b2fb87a29d3ecee9b55040c16791e061b4b3a4dacf1693e"},
 ]
 pulumi-digitalocean = [
-    {file = "pulumi_digitalocean-4.24.0-py3-none-any.whl", hash = "sha256:1c8fb1021c541b87e59577f92bee0d0ab6dfd2c298555f5ea4293f06e9537bc1"},
-    {file = "pulumi_digitalocean-4.24.0.tar.gz", hash = "sha256:cabc8c9fed6cae313424a081a1f6d0a1d4ceadc554979abbdf1d94a0ddcde957"},
+    {file = "pulumi_digitalocean-4.25.1-py3-none-any.whl", hash = "sha256:a20d75d2919ca11cb6e93f5f4705215199c053d7cf94defce9c0b978413c758a"},
+    {file = "pulumi_digitalocean-4.25.1.tar.gz", hash = "sha256:f3ac62e49abd3bfa1efffce2bcf602355c5f7a9a290abc76882b93bd7f756991"},
 ]
 pulumi-docker = [
     {file = "pulumi_docker-4.5.0-py3-none-any.whl", hash = "sha256:eeae4db1841896d0ea97cb5224e56f6e09c3ad1af8e93e6c0ad73eb8fde9b14a"},
     {file = "pulumi_docker-4.5.0.tar.gz", hash = "sha256:d221c9f5d7c3ac3bd601195017f94cc42e9996f3f24fa00254910c534a65efe9"},
 ]
 pulumi-kubernetes = [
-    {file = "pulumi_kubernetes-3.30.2.tar.gz", hash = "sha256:8a7804ec2f2f0da86c153312d63a4ea34af200b24601e58c3c54b81807204ec1"},
+    {file = "pulumi_kubernetes-4.6.1-py3-none-any.whl", hash = "sha256:39a2ff86e65ea59b789eda0f4ddf5e896e2ddf78fffc9a80e68a19cb24b9429a"},
+    {file = "pulumi_kubernetes-4.6.1.tar.gz", hash = "sha256:be6ef26bc4dfe5c3b029512131cd7403cddb807c453dec2c19f9f13c53d7d8ff"},
+]
+pulumi-null = [
+    {file = "pulumi_null-0.0.1.tar.gz", hash = "sha256:c6b73eccb77f4d183dea46311cb2e2cfe065594217d414d435160c238f29703d"},
 ]
 pulumi-random = [
-    {file = "pulumi_random-4.14.0-py3-none-any.whl", hash = "sha256:7cc20a225a2c5c0871f690c9138aa5dbf9255b659d3b4fedb3206b29c4397f7d"},
-    {file = "pulumi_random-4.14.0.tar.gz", hash = "sha256:3bce7efa0a6c175373e074c6ced49a33d74f83480f11de7b2faf43fff063de13"},
+    {file = "pulumi_random-4.15.0-py3-none-any.whl", hash = "sha256:275bc019cf47be523e2f4f1620d0495fefa0ecb1c23e4bc5ab29aa95bd6d45b7"},
+    {file = "pulumi_random-4.15.0.tar.gz", hash = "sha256:33731cdb10a943e966c6d84d823e0ce2437bb800d19ae7effad3c64c3c2a8648"},
 ]
 pure-eval = [
     {file = "pure_eval-0.2.2-py3-none-any.whl", hash = "sha256:01eaab343580944bc56080ebe0a674b39ec44a945e6d09ba7db3cb8cec289350"},
     {file = "pure_eval-0.2.2.tar.gz", hash = "sha256:2b45320af6dfaa1750f543d714b6d1c520a1688dec6fd24d339063ce0aaa9ac3"},
 ]
 pygments = [
-    {file = "pygments-2.17.1-py3-none-any.whl", hash = "sha256:1b37f1b1e1bff2af52ecaf28cc601e2ef7077000b227a0675da25aef85784bc4"},
-    {file = "pygments-2.17.1.tar.gz", hash = "sha256:e45a0e74bf9c530f564ca81b8952343be986a29f6afe7f5ad95c5f06b7bdf5e8"},
+    {file = "pygments-2.17.2-py3-none-any.whl", hash = "sha256:b27c2826c47d0f3219f29554824c30c5e8945175d888647acd804ddd04af846c"},
+    {file = "pygments-2.17.2.tar.gz", hash = "sha256:da46cec9fd2de5be3a8a784f434e4c4ab670b4ff54d605c4c2717e9d49c4c367"},
 ]
 pyyaml = [
     {file = "PyYAML-6.0.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:d858aa552c999bc8a8d57426ed01e40bef403cd8ccdd0fc5f6f04a00414cac2a"},
@@ -784,18 +787,18 @@ stack-data = [
     {file = "stack_data-0.6.3.tar.gz", hash = "sha256:836a778de4fec4dcd1dcd89ed8abff8a221f58308462e1c4aa2a3cf30148f0b9"},
 ]
 traitlets = [
-    {file = "traitlets-5.13.0-py3-none-any.whl", hash = "sha256:baf991e61542da48fe8aef8b779a9ea0aa38d8a54166ee250d5af5ecf4486619"},
-    {file = "traitlets-5.13.0.tar.gz", hash = "sha256:9b232b9430c8f57288c1024b34a8f0251ddcc47268927367a0dd3eeaca40deb5"},
+    {file = "traitlets-5.14.0-py3-none-any.whl", hash = "sha256:f14949d23829023013c47df20b4a76ccd1a85effb786dc060f34de7948361b33"},
+    {file = "traitlets-5.14.0.tar.gz", hash = "sha256:fcdaa8ac49c04dfa0ed3ee3384ef6dfdb5d6f3741502be247279407679296772"},
 ]
 typing-extensions = [
-    {file = "typing_extensions-4.8.0-py3-none-any.whl", hash = "sha256:8f92fc8806f9a6b641eaa5318da32b44d401efaac0f6678c9bc448ba3605faa0"},
-    {file = "typing_extensions-4.8.0.tar.gz", hash = "sha256:df8e4339e9cb77357558cbdbceca33c303714cf861d1eef15e1070055ae8b7ef"},
+    {file = "typing_extensions-4.9.0-py3-none-any.whl", hash = "sha256:af72aea155e91adfc61c3ae9e0e342dbc0cba726d6cba4b6c72c1f34e47291cd"},
+    {file = "typing_extensions-4.9.0.tar.gz", hash = "sha256:23478f88c37f27d76ac8aee6c905017a143b0b1b886c3c9f66bc2fd94f9f5783"},
 ]
 urllib3 = [
     {file = "urllib3-2.1.0-py3-none-any.whl", hash = "sha256:55901e917a5896a349ff771be919f8bd99aff50b79fe58fec595eb37bbc56bb3"},
     {file = "urllib3-2.1.0.tar.gz", hash = "sha256:df7aa8afb0148fa78488e7899b2c59b5f4ffcfa82e6c54ccb9dd37c1d7b52d54"},
 ]
 wcwidth = [
-    {file = "wcwidth-0.2.11-py2.py3-none-any.whl", hash = "sha256:c4b153acf29f1f0d7fb1b00d097cce82b73de7a2016321c8d7ca71bd76dd848b"},
-    {file = "wcwidth-0.2.11.tar.gz", hash = "sha256:25eb3ecbec328cdb945f56f2a7cfe784bdf7a73a8197398c7a7c65e7fe93e9ae"},
+    {file = "wcwidth-0.2.12-py2.py3-none-any.whl", hash = "sha256:f26ec43d96c8cbfed76a5075dac87680124fa84e0855195a6184da9c187f133c"},
+    {file = "wcwidth-0.2.12.tar.gz", hash = "sha256:f01c104efdf57971bcb756f054dd58ddec5204dd15fa31d6503ea57947d97c02"},
 ]

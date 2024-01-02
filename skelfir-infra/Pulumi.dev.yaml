@@ -1,4 +1,6 @@
 config:
+  betterstack:token:
+    secure: AAABABkjcMFqT3LOAlbzYSh6qZ+JprA1625XwZYO3PCBdfBg5MAF6a/YALy7W1aBQE+CG43ozvs=
   digitalocean:token:
     secure: AAABAPXhqAOj3OUi37ytygZ7VLF7bSRbhJymbTpY48Pc9IdHz9nLvwjSnoqWFH5SKAwUdW2XijANPO+gkyeiw0eMB22rbFjQhjbWiYMnE1eCzI5SiVW8uBGjAF720+nsptO80kpm4Q==
   infra:cluster:
