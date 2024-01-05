@@ -39,7 +39,7 @@ def get_kubeconfig(name):
 	command = 'k3d kubeconfig get {name}'
 	command = command.format(name=name)
 	p = run(command)
-	return p.stdout.decode()
+	return yaml.safe_load(p.stdout.decode())
 
 
 class K3dProvider(ResourceProvider):
@@ -48,6 +48,8 @@ class K3dProvider(ResourceProvider):
 		write_config(inputs['config'])
 		create_k3d_cluster(cluster_name)
 		kubeconfig = get_kubeconfig(cluster_name)
+		clusters = kubeconfig["clusters"]
+		cluster_0 = clusters[0]
 		return CreateResult(
 			cluster_name,
 			outs={
@@ -63,7 +65,7 @@ class K3dProvider(ResourceProvider):
 
 class K3dCluster(Resource):
 	name: Output[str]
-	kube_configs: Output[str]
+	kube_configs: Output[list[dict]]
 
 	def __init__(self, name, config, opts=None):
 		args = {

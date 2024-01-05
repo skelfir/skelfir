@@ -1,6 +1,8 @@
 import pulumi
 import pulumi_digitalocean as do
 
+import utils
+
 stack = pulumi.get_stack()
 
 
@@ -38,7 +40,7 @@ def provision_dnsrecord(
 		domain=domain,
 		name=name,
 		type="A",
-		value=value,
+		value=value.apply(lambda ip: ip),
 		opts=pulumi.ResourceOptions(
 			parent=parent,
 			depends_on=[]
@@ -57,33 +59,31 @@ class SkelfirNetwork(pulumi.ComponentResource):
 		#	region=config.require('region')
 		#)
 
-		skelfir_lb = provision_loadbalancer(parent=self)
+		loadbalancer = provision_loadbalancer(parent=self)
+		ip_output = getattr(loadbalancer, "ip", None)
 
 		dev_subdomain = provision_dnsrecord(
 			name="dev",
-			value=skelfir_lb.ip.apply(lambda ip: ip),
-			parent=skelfir_lb,
+			value=ip_output,
+			parent=loadbalancer,
 		)
 
 		api_subdomain = provision_dnsrecord(
 			name="api",
-			value=skelfir_lb.ip.apply(lambda ip: ip),
-			parent=skelfir_lb,
+			value=ip_output,
+			parent=loadbalancer,
 		)
 
 		web_subdomain = provision_dnsrecord(
 			name="web",
-			value=skelfir_lb.ip.apply(lambda ip: ip),
-			parent=skelfir_lb,
+			value=ip_output,
+			parent=loadbalancer,
 		)
 
-		self.loadbalancer = skelfir_lb
-		#self.loadbalancer_id = skelfir_lb.id
-		#self.loadbalancer_ip = skelfir_lb.ip
+		self.loadbalancer = loadbalancer
 		self.dev_subdomain = dev_subdomain
 		self.register_outputs({
-			#"loadbalancer_id": skelfir_lb.id,
-			#"loadbalancer_ip": skelfir_lb.ip,
+			"loadbalancer": loadbalancer,
 			"dev_subdomain": dev_subdomain,
 		})
 
@@ -103,4 +103,5 @@ def create(ip_address=None, parent=None):
 		#pulumi.export('ingress_ip', network.loadbalancer.ip)
 		#pulumi.export('loadbalancer_id', network.loadbalancer.id)
 		#pulumi.export('cluster_fqdn', network.dev_subdomain.fqdn)
-	return network, exports
+	utils.export_all(exports)
+	return network

@@ -8,7 +8,6 @@ stack = pulumi.get_stack()
 
 def create(config):
 	if stack == "local":
-		cluster = None
 		cluster = K3dCluster('k3d-cluster', config)
 	else:
 		#cluster_cfg = config.require_object('cluster')
@@ -38,4 +37,5 @@ def create(config):
 				depends_on=[],
 			),
 		)
-	return cluster, {"cluster_id": cluster.id}
+	pulumi.export("cluster_id", cluster.id)
+	return cluster

@@ -2,11 +2,14 @@ config:
   betterstack:token:
     secure: AAABAL/SBJnvs7oJALZOfK/SmvxO9xnO7tDlfhFbEieiq4JOOtZuZeY6ONfaWYyO0ieET47xoYs=
   infra:cluster:
-    agents: 1
+    agents: 0
     apiVersion: k3d.io/v1alpha3
     image: rancher/k3s:v1.21.12-k3s1
     kind: Simple
     name: local-dev-cluster
+    #kubeAPI: # same as `--api-port myhost.my.domain:6445` (where the name would resolve to 127.0.0.1)
+    #  host: "myhost.my.domain" # important for the `server` setting in the kubeconfig
+    #  hostIP: "127.1.1.1" # where the Kubernetes API will be listening on
     options:
       k3d:
         wait: true
@@ -15,14 +18,18 @@ config:
           - arg: --disable=traefik
             nodeFilters:
               - server:*
+          - arg: --disable=metrics-server
+            nodeFilters:
+              - server:*
         nodeLabels:
           - label: nodegroup=workers
             nodeFilters:
               - agent:*
     ports:
-      - nodeFilters:
+      # expose cluster on IP address 127.1.1.1 and port 80
+      - port: 127.1.1.1:80:80
+        nodeFilters:
           - loadbalancer
-        port: 80:80
     registries:
       config: |
         mirrors:

@@ -11,4 +11,5 @@ def get_id():
 		# only need to get it
 		certificate = do.get_certificate(name="skelfir")
 		cert_id = certificate.uuid
+	pulumi.export("certificate_id", cert_id)
 	return cert_id

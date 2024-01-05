@@ -1,39 +1,43 @@
-from pathlib import Path
-
-import yaml
 import pulumi
 
+import utils
 from modules import infra
 from modules import kubernetes
 
 config = pulumi.Config()
 exports = {}
 
+###########################
+#                         #
+#  ALL NETWORK RESOURCES  #
+#  only when stack!=local #
+#  includes Load Balancer #
+#    and DNS records      #
+#                         #
+###########################
+skelfir_network = infra.network.create()
 
-def load_ext_config(file_name, raw=False):
-	configs_path = Path.cwd().joinpath('configs')
-	file_path = configs_path.joinpath(file_name)
-	with open(file_path) as f:
-		if raw:
-			data = f.read()
-		else:
-			data = yaml.safe_load(f)
-	return data
+########################
+#                      #
+#  KUBERNETES CLUSTER  #
+#                      #
+########################
+cluster = infra.cluster.create(config.require_object("cluster"))
 
-skelfir_network, network_exports = infra.network.create()
-exports = {**exports, **network_exports}
-
-cluster_cfg = config.require_object('cluster')
-cluster, cluster_exports = infra.cluster.create(cluster_cfg)
-exports = {**exports, **cluster_exports}
+#########################
+#                       #
+#     LOCAL REGISTRY    #
+# only when stack=local #
+#                       #
+#########################
+registry = infra.registry.create(depends_on=[cluster])
 
 # workaround for expiring DOKS cluster token
 # see: https://github.com/pulumi/pulumi-digitalocean/issues/78#issuecomment-639669865
 kube_config = kubernetes.kubeconfig.create(
 	cluster,
-	template=load_ext_config("kubeconfig-template.yaml", raw=True)
+	template=utils.load_ext_config("kubeconfig-template.yaml", raw=True)
 )
-exports["kube_config"] = kube_config
 
 k8s_provider = kubernetes.provider.create(
 	kubeconfig=kube_config,
@@ -48,10 +52,9 @@ ingress_ns, metrics_ns = kubernetes.namespace.create(
 )
 
 certificate_id = infra.certificate.get_id()
-exports["certificate_id"] = certificate_id
 ingress_contour = kubernetes.helm.ingress.create(
 	namespace=ingress_ns,
-	values=load_ext_config("contour-values.yaml"),
+	values=utils.load_ext_config("contour-values.yaml"),
 	loadbalancer=skelfir_network.loadbalancer,
 	certificate_id=certificate_id,
 	parent=ingress_ns,
@@ -61,7 +64,7 @@ ingress_contour = kubernetes.helm.ingress.create(
 
 metrics = kubernetes.helm.metrics.create(
 	namespace=metrics_ns,
-	values=load_ext_config("metrics-server-values.yaml"),
+	values=utils.load_ext_config("metrics-server-values.yaml"),
 	parent=metrics_ns,
 	depends_on=[metrics_ns],
 	provider=k8s_provider
@@ -70,7 +73,7 @@ metrics = kubernetes.helm.metrics.create(
 # betterstack is the monitoring and log aggregation solution
 betterstack = kubernetes.helm.monitoring.create(
 	namespace=metrics_ns,
-	values=load_ext_config("betterstack-values.yaml"),
+	values=utils.load_ext_config("betterstack-values.yaml"),
 	parent=metrics_ns,
 	provider=k8s_provider,
 	depends_on=metrics.ready
@@ -99,5 +102,5 @@ betterstack = kubernetes.helm.monitoring.create(
 #	)
 #)
 
-for key, value in exports.items():
-	pulumi.export(key, value)
+#for key, value in exports.items():
+#	pulumi.export(key, value)
