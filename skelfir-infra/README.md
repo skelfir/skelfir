@@ -3,6 +3,9 @@
 # Skelfir infra
 Infrastructure provisioning for skelfir.com
 
+## Infrastructure overview
+![alt text](https://github.com/skelfir/skelfir/blob/main/skelfir-infra/skelfir_infra_overview.png?raw=true)
+
 ## Project structure
 ```
 .
